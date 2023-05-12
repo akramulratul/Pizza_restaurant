@@ -2,11 +2,14 @@ import Image from "next/image";
 import styles from "../../styles/Product.module.css";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addProduct } from "../../redux/cartSlice";
 const Product = ({ pizza }) => {
   const [price, setPrice] = useState(pizza.prices[0]);
   const [size, setSize] = useState(0);
   const [extras, setExtras] = useState([]);
-  const [quantity, setQuantity] = useState([]);
+  const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
 
   const changePrice = (number) => {
     setPrice(price + number);
@@ -15,9 +18,6 @@ const Product = ({ pizza }) => {
     const difference = pizza.prices[sizeIndex] - pizza.prices[size];
     setSize(sizeIndex);
     changePrice(difference);
-  };
-  const handleClick = () => {
-    dispatch(addProduct({ ...pizza, extras, price, quantity }));
   };
 
   const handleChange = (e, option) => {
@@ -30,12 +30,14 @@ const Product = ({ pizza }) => {
       setExtras(extras.filter((extra) => extra._id !== option._id));
     }
   };
-
+  const handleClick = () => {
+    dispatch(addProduct({ ...pizza, extras, price, quantity }));
+  };
   return (
     <div className={styles.container}>
       <div className={styles.left}>
         <div className={styles.imgContainer}>
-          <Image src={pizza.img} fill contain alt="" />
+          <Image src={pizza.img} fill contain="true" alt="" />
         </div>
       </div>
       <div className={styles.right}>
@@ -79,7 +81,9 @@ const Product = ({ pizza }) => {
             defaultValue={1}
             className={styles.quantity}
           />
-          <button onClick={handleClick} className={styles.button}>Add to Cart</button>
+          <button onClick={handleClick} className={styles.button}>
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>

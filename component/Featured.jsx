@@ -28,7 +28,7 @@ const Featured = () => {
         style={{ left: 0 }}
         onClick={() => handleArrow("l")}
       >
-        <Image src="/img/arrowl.png" alt="" fill contain />
+        <Image src="/img/arrowl.png" alt="" fill contain="true" />
       </div>
       <div
         className={styles.wrapper}
@@ -36,7 +36,7 @@ const Featured = () => {
       >
         {images.map((img, i) => (
           <div className={styles.imgContainer} key={i}>
-            <Image src={img} alt="" fill contain />
+            <Image src={img} alt="" fill contain="true" />
           </div>
         ))}
       </div>
@@ -45,7 +45,7 @@ const Featured = () => {
         style={{ right: 0 }}
         onClick={() => handleArrow("r")}
       >
-        <Image src="/img/arrowr.png" alt="" fill contain />
+        <Image src="/img/arrowr.png" alt="" fill contain="true" />
       </div>
     </div>
   );
