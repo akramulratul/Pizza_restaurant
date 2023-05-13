@@ -3,92 +3,93 @@ import styles from "../styles/Cart.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  PayPalScriptProvider,
-  PayPalButtons,
-  usePayPalScriptReducer,
-} from "@paypal/react-paypal-js";
+// import {
+//   PayPalScriptProvider,
+//   PayPalButtons,
+//   usePayPalScriptReducer,
+// } from "@paypal/react-paypal-js";
 import OrderDetail from "../component/OrderDetail";
 import { reset } from "../redux/cartSlice";
 import axios from "axios";
 
-const cart = () => {
+const Cart = () => {
   // This values are the props in the UI
   const cart = useSelector((state) => state.cart);
   const [open, setOpen] = useState(false);
   const [cash, setCash] = useState(false);
   const amount = cart.total;
-  const currency = "USD";
-  const style = { layout: "vertical" };
+  // const currency = "USD";
+  // const style = { layout: "vertical" };
   const dispatch = useDispatch();
-
   const router = useRouter();
 
   const createOrder = async (data) => {
     try {
       const res = await axios.post("http://localhost:3000/api/orders", data);
-      res.status === 201 && router.push("/orders/" + res.data._id);
-      dispatch(reset());
+      if (res.status === 201 && dispatch(reset())) {
+        console.log("integrated");
+        router.push(`/orders/${res.data._id}`);
+      }
     } catch (err) {
       console.log(err);
     }
   };
-  // Custom component to wrap the PayPalButtons and handle currency changes
-  const ButtonWrapper = ({ currency, showSpinner }) => {
-    // usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
-    // This is the main reason to wrap the PayPalButtons in a new component
-    const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  // // Custom component to wrap the PayPalButtons and handle currency changes
+  // const ButtonWrapper = ({ currency, showSpinner }) => {
+  //   // usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
+  //   // This is the main reason to wrap the PayPalButtons in a new component
+  //   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
 
-    useEffect(() => {
-      dispatch({
-        type: "resetOptions",
-        value: {
-          ...options,
-          currency: currency,
-        },
-      });
-    }, [currency, showSpinner]);
+  //   useEffect(() => {
+  //     dispatch({
+  //       type: "resetOptions",
+  //       value: {
+  //         ...options,
+  //         currency: currency,
+  //       },
+  //     });
+  //   }, [currency, showSpinner]);
 
-    return (
-      <>
-        {showSpinner && isPending && <div className="spinner" />}
-        <PayPalButtons
-          style={style}
-          disabled={false}
-          forceReRender={[amount, currency, style]}
-          fundingSource={undefined}
-          createOrder={(data, actions) => {
-            return actions.order
-              .create({
-                purchase_units: [
-                  {
-                    amount: {
-                      currency_code: currency,
-                      value: amount,
-                    },
-                  },
-                ],
-              })
-              .then((orderId) => {
-                // Your code here after create the order
-                return orderId;
-              });
-          }}
-          onApprove={function (data, actions) {
-            return actions.order.capture().then(function (details) {
-              const shipping = details.purchase_units[0].shipping;
-              createOrder({
-                customer: shipping.name.full_name,
-                address: shipping.address.address_line_1,
-                total: cart.total,
-                method: 1,
-              });
-            });
-          }}
-        />
-      </>
-    );
-  };
+  //   return (
+  //     <>
+  //       {showSpinner && isPending && <div className="spinner" />}
+  //       <PayPalButtons
+  //         style={style}
+  //         disabled={false}
+  //         forceReRender={[amount, currency, style]}
+  //         fundingSource={undefined}
+  //         createOrder={(data, actions) => {
+  //           return actions.order
+  //             .create({
+  //               purchase_units: [
+  //                 {
+  //                   amount: {
+  //                     currency_code: currency,
+  //                     value: amount,
+  //                   },
+  //                 },
+  //               ],
+  //             })
+  //             .then((orderId) => {
+  //               // Your code here after create the order
+  //               return orderId;
+  //             });
+  //         }}
+  //         onApprove={function (data, actions) {
+  //           return actions.order.capture().then(function (details) {
+  //             const shipping = details.purchase_units[0].shipping;
+  //             createOrder({
+  //               customer: shipping.name.full_name,
+  //               address: shipping.address.address_line_1,
+  //               total: cart.total,
+  //               method: 1,
+  //             });
+  //           });
+  //         }}
+  //       />
+  //     </>
+  //   );
+  // };
 
   return (
     <div className={styles.container}>
@@ -156,7 +157,7 @@ const cart = () => {
               >
                 CASH ON DELIVERY
               </button>
-              <PayPalScriptProvider
+              {/* <PayPalScriptProvider
                 options={{
                   "client-id": "test",
                   components: "buttons",
@@ -165,7 +166,7 @@ const cart = () => {
                 }}
               >
                 <ButtonWrapper currency={currency} showSpinner={false} />
-              </PayPalScriptProvider>
+              </PayPalScriptProvider> */}
             </div>
           ) : (
             <button onClick={() => setOpen(true)} className={styles.button}>
@@ -179,4 +180,4 @@ const cart = () => {
   );
 };
 
-export default cart;
+export default Cart;

@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import styles from "../styles/OrderDetail.module.css";
+
 const OrderDetail = ({ total, createOrder }) => {
   const [customer, setCustomer] = useState("");
   const [address, setAddress] = useState("");
 
   const handleClick = () => {
-    createOrder({ customer, address, total, method: 0 });
+    createOrder({
+      customer,
+      address,
+      total,
+      method: 0,
+    });
   };
   return (
     <div className={styles.container}>
