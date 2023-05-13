@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className={styles.container}>
       <div className={styles.item}>
-        <Image src="/img/bg.png" fill cover alt="" />
+        <Image src="/img/bg.png" fill alt="" />
       </div>
       <div className={styles.item}>
         <div className={styles.card}>
@@ -45,7 +45,7 @@ const Footer = () => {
             9:00 - 22:00
           </p>
           <p className={styles.text}>
-           SATURDAY - SUNDAY
+            SATURDAY - SUNDAY
             <br />
             12:00 - 24:00
           </p>

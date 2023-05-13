@@ -3,14 +3,14 @@ import mongoose from "mongoose";
 const OrderSchema = new mongoose.Schema(
   {
     customer: {
-      type: string,
+      type: String,
       required: true,
-      maxlength: 60,
+      maxlength: 600,
     },
     address: {
-      type: string,
+      type: String,
       required: true,
-      maxlength: 200,
+      maxlength: 2000,
     },
     total: {
       type: Number,
@@ -28,5 +28,4 @@ const OrderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Order ||
-  mongoose.model("Product", OrderSchema);
+export default mongoose.models.Order || mongoose.model("Order", OrderSchema);
