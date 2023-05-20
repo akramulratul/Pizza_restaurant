@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import styles from "../../styles/Admin.module.css";
-import Image from "next/image";
 import axios from "axios";
+import Image from "next/image";
+import { useState } from "react";
+import styles from "../../styles/Admin.module.css";
 
-const index = ({ orders, products }) => {
+const Index = ({ orders, products }) => {
   const [pizzaList, setPizzaList] = useState(products);
   const [orderList, setOrderList] = useState(orders);
+  const status = ["preparing", "on the way", "delivered"];
+
   const handleDelete = async (id) => {
     console.log(id);
     try {
@@ -34,6 +36,7 @@ const index = ({ orders, products }) => {
       console.log(err);
     }
   };
+
   return (
     <div className={styles.container}>
       <div className={styles.item}>
@@ -48,7 +51,7 @@ const index = ({ orders, products }) => {
               <th>Action</th>
             </tr>
           </tbody>
-          {products.map((product) => {
+          {pizzaList.map((product) => (
             <tbody key={product._id}>
               <tr className={styles.trTitle}>
                 <td>
@@ -56,11 +59,11 @@ const index = ({ orders, products }) => {
                     src={product.img}
                     width={50}
                     height={50}
-                   cover= "true"
+                    cover="true"
                     alt=""
                   />
                 </td>
-                <td>{product._id.slice(0, 5)}..</td>
+                <td>{product._id.slice(0, 5)}...</td>
                 <td>{product.title}</td>
                 <td>${product.prices[0]}</td>
                 <td>
@@ -73,9 +76,8 @@ const index = ({ orders, products }) => {
                   </button>
                 </td>
               </tr>
-              ;
-            </tbody>;
-          })}
+            </tbody>
+          ))}
         </table>
       </div>
       <div className={styles.item}>
@@ -91,25 +93,42 @@ const index = ({ orders, products }) => {
               <th>Action</th>
             </tr>
           </tbody>
-          <tbody>
-            <tr className={styles.trTitle}>
-              <td>{"89546354414141".slice(0, 5)}...</td>
-              <td>John Doe</td>
-              <td>$50</td>
-              <td>paid</td>
-              <td>preparing</td>
-              <td>
-                <button>Next stage</button>
-              </td>
-            </tr>
-          </tbody>
+          {orderList.map((order) => (
+            <tbody key={order._id}>
+              <tr className={styles.trTitle}>
+                <td>{order._id.slice(0, 5)}...</td>
+                <td>{order.customer}</td>
+                <td>${order.total}</td>
+                <td>
+                  {order.method === 0 ? <span>cash</span> : <span>paid</span>}
+                </td>
+                <td>{status[order.status]}</td>
+                <td>
+                  <button onClick={() => handleStatus(order._id)}>
+                    Next Stage
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          ))}
         </table>
       </div>
     </div>
   );
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (ctx) => {
+  const myCookie = ctx.req?.cookies || "";
+
+  if (myCookie.token !== process.env.TOKEN) {
+    return {
+      redirect: {
+        destination: "/admin/login",
+        permanent: false,
+      },
+    };
+  }
+
   const productRes = await axios.get("http://localhost:3000/api/products");
   const orderRes = await axios.get("http://localhost:3000/api/orders");
 
@@ -120,4 +139,5 @@ export const getServerSideProps = async () => {
     },
   };
 };
-export default index;
+
+export default Index;
