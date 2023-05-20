@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/Add.module.css";
 import axios from "axios";
-import { useRouter } from "next/router";
 
 const Add = ({ setClose }) => {
   const [file, setFile] = useState(null);
@@ -28,10 +27,10 @@ const Add = ({ setClose }) => {
   const handleCreate = async () => {
     const data = new FormData();
     data.append("file", file);
-    data.append("upload_preset", "uploads");
-    try {
+    data.append("upload_preset", "rcosjz3e");
+    try { 
       const uploadRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/dsbyq4sj1/image/upload",
+        "https://api.cloudinary.com/v1_1/dfjttf1x6/image/upload",
         data
       );
 
@@ -44,7 +43,7 @@ const Add = ({ setClose }) => {
         img: url,
       };
 
-      await axios.post("http://localhost:3000/api/products", newProduct);
+      await axios.post("/api/products", newProduct);
       setClose(true);
     } catch (err) {
       console.log(err);

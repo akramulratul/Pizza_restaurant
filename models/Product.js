@@ -14,12 +14,12 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       maxlength: 200,
     },
-    img: {
-      type: String,
-      required: true,
-    },
     prices: {
       type: [Number],
+      required: true,
+    },
+    img: {
+      type: String,
       required: true,
     },
     extraOptions: {
@@ -36,5 +36,3 @@ const ProductSchema = new mongoose.Schema(
 
 export default mongoose.models.Product ||
   mongoose.model("Product", ProductSchema);
-
-  
